@@ -1,3 +1,5 @@
+let listOfTabId = [];
+
 let displayBtn = document.getElementById("input-btn");
 let groupBtn = document.getElementById("group-btn");
 
@@ -12,15 +14,17 @@ groupBtn.addEventListener("click", function () {
 });
 
 function getPropertiesOfAllTabs() {
+  console.log(listOfTabId);
   chrome.tabs.query({}, function (tabs) {
     tabs.forEach((tab) => {
-      console.log(tab.id);
+      listOfTabId.push(tab.id);
       console.log(tab.url);
     });
   });
 }
 function groupTabs() {
-  chrome.tabs.group({}, function () {
-    console.log("grouping..");
+  chrome.tabs.group({ tabIds: listOfTabId }, function (tabs) {
+    console.log(tabs);
+    console.log("tabs in groups...");
   });
 }
