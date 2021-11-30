@@ -8,9 +8,15 @@ let singleBtn = document.getElementById("single-btn");
 const ulEl = document.getElementById("ul-el");
 
 displayBtn.addEventListener("click", function () {
-  console.log("******The Beginning of the Project********");
+  console.log("******Display All tab urls******");
   getPropertiesOfAllTabs();
-  rendertabs();
+  rendertabs(listOfAllTabUrls);
+});
+
+singleBtn.addEventListener("click", function () {
+  console.log("******Display selected tab url******");
+  getCurrentTab();
+  rendertabs(selectedTabs);
 });
 
 groupBtn.addEventListener("click", function () {
@@ -18,19 +24,13 @@ groupBtn.addEventListener("click", function () {
   groupAllTabs();
 });
 
-singleBtn.addEventListener("click", function () {
-  console.log("******Display selected tab url******");
-  getCurrentTab();
-});
-
-// Renders tab urls in extension page
-function rendertabs() {
+function rendertabs(tabUrls) {
   let listItems = "";
-  for (let i = 0; i < listOfAllTabUrls.length; i++) {
+  for (let i = 0; i < tabUrls.length; i++) {
     listItems += `
           <li>
-              <a target='_blank' href='${listOfAllTabUrls[i]}'>
-                  ${listOfAllTabUrls[i]}
+              <a target='_blank' href='${tabUrls[i]}'>
+                  ${tabUrls[i]}
               </a>
           </li>
       `;
