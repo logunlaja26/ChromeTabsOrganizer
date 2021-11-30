@@ -1,17 +1,21 @@
-let listOfTabId = [];
+let listOfAllTabId = [];
+let listOfAllTabUrls = [];
+let selectedTabs = [];
 
 let displayBtn = document.getElementById("input-btn");
 let groupBtn = document.getElementById("group-btn");
 let singleBtn = document.getElementById("single-btn");
+const ulEl = document.getElementById("ul-el");
 
 displayBtn.addEventListener("click", function () {
   console.log("******The Beginning of the Project********");
   getPropertiesOfAllTabs();
+  rendertabs();
 });
 
 groupBtn.addEventListener("click", function () {
   console.log("******This is for the grouping functionality******");
-  groupTabs();
+  groupAllTabs();
 });
 
 singleBtn.addEventListener("click", function () {
@@ -19,25 +23,53 @@ singleBtn.addEventListener("click", function () {
   getCurrentTab();
 });
 
+// Renders tab urls in extension page
+function rendertabs() {
+  let listItems = "";
+  for (let i = 0; i < listOfAllTabUrls.length; i++) {
+    listItems += `
+          <li>
+              <a target='_blank' href='${listOfAllTabUrls[i]}'>
+                  ${listOfAllTabUrls[i]}
+              </a>
+          </li>
+      `;
+  }
+  ulEl.innerHTML = listItems;
+}
+
+// Store array of tab urls to localStorage
+
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };
   let [tab] = await chrome.tabs.query(queryOptions);
   console.log(tab.id);
+  console.log(tab.url);
+  selectedTabs.push(tab.url); // Selected tab url entered into this array
+  console.log(selectedTabs);
   return tab;
 }
 
 function getPropertiesOfAllTabs() {
-  console.log(listOfTabId);
+  console.log(listOfAllTabId);
   chrome.tabs.query({}, function (tabs) {
     tabs.forEach((tab) => {
-      listOfTabId.push(tab.id);
+      listOfAllTabId.push(tab.id);
+      listOfAllTabUrls.push(tab.url);
       console.log(tab.url);
     });
   });
 }
 
-function groupTabs() {
-  chrome.tabs.group({ tabIds: listOfTabId }, function (tabs) {
+function groupAllTabs() {
+  chrome.tabs.group({ tabIds: listOfAllTabId }, function (tabs) {
+    console.log(tabs);
+    console.log("tabs in groups...");
+  });
+}
+
+function groupSelectedTabs() {
+  chrome.tabs.group({ tabIds: selectedTabs }, function (tabs) {
     console.log(tabs);
     console.log("tabs in groups...");
   });
