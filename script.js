@@ -2,29 +2,33 @@ let listOfAllTabId = [];
 let listOfAllTabUrls = [];
 let selectedTabs = [];
 
-let displayBtn = document.getElementById("input-btn");
-let groupBtn = document.getElementById("group-btn");
+let displayAllTabsBtn = document.getElementById("input-btn");
+let groupTabsBtn = document.getElementById("group-btn");
 let singleBtn = document.getElementById("single-btn");
 const ulEl = document.getElementById("ul-el");
 
-displayBtn.addEventListener("click", function () {
+displayAllTabsBtn.addEventListener("click", function () {
   console.log("******Display All tab urls******");
   getPropertiesOfAllTabs();
-  rendertabs(listOfAllTabUrls);
+  localStorage.setItem("listOfAllTabUrls", JSON.stringify(listOfAllTabUrls));
+  renderTabs(listOfAllTabUrls);
+  console.log(localStorage.getItem("listOfAllTabUrls")); // to verify data is persisted to local storage
 });
 
 singleBtn.addEventListener("click", function () {
   console.log("******Display selected tab url******");
   getCurrentTab();
-  rendertabs(selectedTabs);
+  localStorage.setItem("selectedTabs", JSON.stringify(selectedTabs));
+  renderTabs(selectedTabs);
+  console.log(localStorage.getItem("selectedTabs"));
 });
 
-groupBtn.addEventListener("click", function () {
-  console.log("******This is for the grouping functionality******");
+groupTabsBtn.addEventListener("click", function () {
+  console.log("******This is for grouping tabs in a window******");
   groupAllTabs();
 });
 
-function rendertabs(tabUrls) {
+function renderTabs(tabUrls) {
   let listItems = "";
   for (let i = 0; i < tabUrls.length; i++) {
     listItems += `
@@ -59,6 +63,7 @@ function getPropertiesOfAllTabs() {
       console.log(tab.url);
     });
   });
+  console.log(listOfAllTabUrls);
 }
 
 function groupAllTabs() {
