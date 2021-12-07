@@ -3,24 +3,45 @@ let listOfAllTabUrls = [];
 let selectedTabs = [];
 
 let displayAllTabsBtn = document.getElementById("input-btn");
+let deleteTabsBtn = document.getElementById("delete-btn");
 let groupTabsBtn = document.getElementById("group-btn");
 let singleBtn = document.getElementById("single-btn");
-const ulEl = document.getElementById("ul-el");
+let ulEl = document.getElementById("ul-el");
+
+let leadsFromLocalStorage = JSON.parse(localStorage.getItem("tabs"));
+console.log(`local storage values ......${leadsFromLocalStorage}`);
+
+if (leadsFromLocalStorage) {
+  listOfAllTabUrls = leadsFromLocalStorage;
+  renderTabs(listOfAllTabUrls);
+}
 
 displayAllTabsBtn.addEventListener("click", function () {
   console.log("******Display All tab urls******");
   getPropertiesOfAllTabs();
-  localStorage.setItem("listOfAllTabUrls", JSON.stringify(listOfAllTabUrls));
+  localStorage.setItem("tabs", JSON.stringify(listOfAllTabUrls));
   renderTabs(listOfAllTabUrls);
-  console.log(localStorage.getItem("listOfAllTabUrls")); // to verify data is persisted to local storage
+  console.log(
+    `lets see whats in localStoragae..... ${localStorage.getItem("tabs")}`
+  );
+  listOfAllTabUrls = []; /** Empties the array in the case of displaying all the tabs after the list of tab urls 
+  has already been displayed in the page. Prevents from adding the same urls over again to the localstorage. 
+   **/
 });
 
 singleBtn.addEventListener("click", function () {
   console.log("******Display selected tab url******");
   getCurrentTab();
-  localStorage.setItem("selectedTabs", JSON.stringify(selectedTabs));
-  renderTabs(selectedTabs);
-  console.log(localStorage.getItem("selectedTabs"));
+  localStorage.setItem("tabs", JSON.stringify(listOfAllTabUrls));
+  renderTabs(listOfAllTabUrls);
+  console.log(localStorage.getItem("tabs"));
+});
+
+deleteTabsBtn.addEventListener("click", function () {
+  console.log("******Delete tabs url******");
+  localStorage.clear();
+  listOfAllTabUrls = [];
+  renderTabs(listOfAllTabUrls);
 });
 
 groupTabsBtn.addEventListener("click", function () {
@@ -49,8 +70,8 @@ async function getCurrentTab() {
   let [tab] = await chrome.tabs.query(queryOptions);
   console.log(tab.id);
   console.log(tab.url);
-  selectedTabs.push(tab.url); // Selected tab url entered into this array
-  console.log(selectedTabs);
+  listOfAllTabUrls.push(tab.url); // Selected tab url entered into this array
+  console.log(listOfAllTabUrls);
   return tab;
 }
 
@@ -74,7 +95,7 @@ function groupAllTabs() {
 }
 
 function groupSelectedTabs() {
-  chrome.tabs.group({ tabIds: selectedTabs }, function (tabs) {
+  chrome.tabs.group({ tabIds: listOfAllTabId }, function (tabs) {
     console.log(tabs);
     console.log("tabs in groups...");
   });
