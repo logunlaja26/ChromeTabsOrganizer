@@ -12,3 +12,7 @@ button {
   border: none;
   font-weight: bold;
 }
+
+.container {
+  text-align: center;
+}
