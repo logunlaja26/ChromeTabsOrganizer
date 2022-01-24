@@ -6,7 +6,11 @@ let displayAllTabsBtn = document.getElementById("input-btn");
 let deleteTabsBtn = document.getElementById("delete-btn");
 let groupTabsBtn = document.getElementById("group-btn");
 let singleBtn = document.getElementById("single-btn");
-let ulEl = document.getElementById("ul-el");
+let tableDisplay = document.getElementById("myTable");
+let btn = document.createElement("button");
+
+const tbodyEl = document.querySelector("tbody");
+const tableEl = document.querySelector("table");
 
 let leadsFromLocalStorage = JSON.parse(localStorage.getItem("tabs"));
 console.log(`local storage values ......${leadsFromLocalStorage}`);
@@ -15,6 +19,8 @@ if (leadsFromLocalStorage) {
   listOfAllTabUrls = leadsFromLocalStorage;
   renderTabs(listOfAllTabUrls);
 }
+
+tableEl.addEventListener("click", onDeleteRow);
 
 displayAllTabsBtn.addEventListener("click", function () {
   console.log("******Display All tab urls******");
@@ -53,17 +59,16 @@ function renderTabs(tabUrls) {
   let listItems = "";
   for (let i = 0; i < tabUrls.length; i++) {
     listItems += `
-          <li>
-              <a target='_blank' href='${tabUrls[i]}'>
-                  ${tabUrls[i]}
-              </a>
-          </li>
-      `;
+      <tr>
+          <td><button class="deleteBtn">Delete</button></td>
+          <td><a target='_blank' href='${tabUrls[i]}'>
+          ${tabUrls[i]}
+      </a></td>
+      </tr>
+  `;
   }
-  ulEl.innerHTML = listItems;
+  tbodyEl.innerHTML = listItems;
 }
-
-// Store array of tab urls to localStorage
 
 async function getCurrentTab() {
   let queryOptions = { active: true, currentWindow: true };
@@ -99,4 +104,13 @@ function groupSelectedTabs() {
     console.log(tabs);
     console.log("tabs in groups...");
   });
+}
+
+function onDeleteRow(e) {
+  if (!e.target.classList.contains("deleteBtn")) {
+    return;
+  }
+
+  const btn = e.target;
+  btn.closest("tr").remove();
 }
