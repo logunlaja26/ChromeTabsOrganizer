@@ -33,6 +33,7 @@ displayAllTabsBtn.addEventListener("click", function () {
   listOfAllTabUrls = []; /** Empties the array in the case of displaying all the tabs after the list of tab urls 
   has already been displayed in the page. Prevents from adding the same urls over again to the localstorage. 
    **/
+  getfavicon();
 });
 
 singleBtn.addEventListener("click", function () {
@@ -59,14 +60,15 @@ function renderTabs(tabUrls) {
   let listItems = "";
   for (let i = 0; i < tabUrls.length; i++) {
     listItems += `
-      <tr>
-          <td><button class="deleteBtn">Delete</button></td>
-          <td><a target='_blank' href='${tabUrls[i]}'>
-          ${tabUrls[i]}
-      </a></td>
-      </tr>
-  `;
+          <tr>
+              <td><button class="deleteBtn">Delete</button></td>
+              <td><a target='_blank' href='${tabUrls[i].url}'>
+              ${tabUrls[i].title}
+              </a></td>
+          </tr>
+      `;
   }
+  // <td>${tabUrls[i].favIconUrl}</td>
   tbodyEl.innerHTML = listItems;
 }
 
@@ -84,9 +86,15 @@ function getPropertiesOfAllTabs() {
   console.log(listOfAllTabId);
   chrome.tabs.query({}, function (tabs) {
     tabs.forEach((tab) => {
+      let tabOject = {
+        url: tab.url,
+        id: tab.id,
+        favIconUrl: tab.favIconUrl,
+        title: tab.title,
+      };
       listOfAllTabId.push(tab.id);
-      listOfAllTabUrls.push(tab.url);
-      console.log(tab.url);
+      listOfAllTabUrls.push(tabOject);
+      //console.log(listOfAllTabUrls);
     });
   });
   console.log(listOfAllTabUrls);
@@ -113,4 +121,15 @@ function onDeleteRow(e) {
 
   const btn = e.target;
   btn.closest("tr").remove();
+}
+
+function getfavicon() {
+  chrome.tabs.query({ url: listOfAllTabUrls }, (tabs) => {
+    if (tabs.length) {
+      for (let tab of tabs) {
+        console.log(tab.favIconUrl);
+      }
+      // Proposed method to get and display Favicon image
+    }
+  });
 }
