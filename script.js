@@ -77,7 +77,7 @@ async function getCurrentTab() {
   let [tab] = await chrome.tabs.query(queryOptions);
   console.log(tab.id);
   console.log(tab.url);
-  listOfAllTabUrls.push(tab.url); // Selected tab url entered into this array
+  listOfAllTabUrls.push(tab.url);
   console.log(listOfAllTabUrls);
   return tab;
 }
@@ -96,7 +96,6 @@ function getPropertiesOfAllTabs() {
     });
     removeDuplicates();
   });
-  //removeDuplicates();
   console.log(listOfAllTabUrls);
 }
 
@@ -122,7 +121,9 @@ function onDeleteRow(e) {
   const btn = e.target;
   btn.closest("tr").remove();
   listOfAllTabUrls.remove();
-  console.log(`The new list of tabs after row is deleted....${listOfAllTabUrls}`)
+  console.log(
+    `The new list of tabs after row is deleted....${listOfAllTabUrls}`
+  );
 }
 
 const map = new Map();
