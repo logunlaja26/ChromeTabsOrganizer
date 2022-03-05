@@ -1,6 +1,7 @@
 let listOfAllTabId = [];
 let listOfAllTabUrls = [];
 let selectedTabs = [];
+let output3 = [];
 
 let displayAllTabsBtn = document.getElementById("input-btn");
 let deleteTabsBtn = document.getElementById("delete-btn");
@@ -16,8 +17,8 @@ let leadsFromLocalStorage = JSON.parse(localStorage.getItem("tabs"));
 console.log(`local storage values ......${leadsFromLocalStorage}`);
 
 if (leadsFromLocalStorage) {
-  listOfAllTabUrls = leadsFromLocalStorage;
-  renderTabs(listOfAllTabUrls);
+  output3 = leadsFromLocalStorage;
+  renderTabs(output3);
 }
 
 tableEl.addEventListener("click", onDeleteRow);
@@ -25,12 +26,12 @@ tableEl.addEventListener("click", onDeleteRow);
 displayAllTabsBtn.addEventListener("click", function () {
   console.log("******Display All tab urls******");
   getPropertiesOfAllTabs();
-  localStorage.setItem("tabs", JSON.stringify(listOfAllTabUrls));
-  renderTabs(listOfAllTabUrls);
+  localStorage.setItem("tabs", JSON.stringify(output3));
+  renderTabs(output3);
   console.log(
     `lets see whats in localStoragae..... ${localStorage.getItem("tabs")}`
   );
-  listOfAllTabUrls = []; /** Empties the array in the case of displaying all the tabs after the list of tab urls 
+  /*listOfAllTabUrls = []; /** Empties the array in the case of displaying all the tabs after the list of tab urls 
   has already been displayed in the page. Prevents from adding the same urls over again to the localstorage. 
    **/
 });
@@ -47,6 +48,7 @@ deleteTabsBtn.addEventListener("click", function () {
   console.log("******Delete tabs url******");
   localStorage.clear();
   listOfAllTabUrls = [];
+  //output3 = [];
   renderTabs(listOfAllTabUrls);
 });
 
@@ -59,13 +61,13 @@ function renderTabs(tabUrls) {
   let listItems = "";
   for (let i = 0; i < tabUrls.length; i++) {
     listItems += `
-      <tr>
-          <td><button class="deleteBtn">Delete</button></td>
-          <td><a target='_blank' href='${tabUrls[i]}'>
-          ${tabUrls[i]}
-      </a></td>
-      </tr>
-  `;
+          <tr>
+              <td><button class="deleteBtn">Delete</button></td>
+              <td><a target='_blank' href='${tabUrls[i].url}'>
+              ${tabUrls[i].title}
+              </a></td>
+          </tr>
+      `;
   }
   tbodyEl.innerHTML = listItems;
 }
@@ -81,14 +83,20 @@ async function getCurrentTab() {
 }
 
 function getPropertiesOfAllTabs() {
-  console.log(listOfAllTabId);
   chrome.tabs.query({}, function (tabs) {
     tabs.forEach((tab) => {
+      let tabOject = {
+        url: tab.url,
+        id: tab.id,
+        favIconUrl: tab.favIconUrl,
+        title: tab.title,
+      };
       listOfAllTabId.push(tab.id);
-      listOfAllTabUrls.push(tab.url);
-      console.log(tab.url);
+      listOfAllTabUrls.push(tabOject);
     });
+    removeDuplicates();
   });
+  //removeDuplicates();
   console.log(listOfAllTabUrls);
 }
 
@@ -113,4 +121,21 @@ function onDeleteRow(e) {
 
   const btn = e.target;
   btn.closest("tr").remove();
+  listOfAllTabUrls.remove();
+  console.log(`The new list of tabs after row is deleted....${listOfAllTabUrls}`)
+}
+
+const map = new Map();
+function removeDuplicates() {
+  for (const object of listOfAllTabUrls) {
+    if (!map.has(object.url)) {
+      map.set(object.url, true);
+      output3.push({
+        url: object.url,
+        id: object.id,
+        favIconUrl: object.favIconUrl,
+        title: object.title,
+      });
+    }
+  }
 }
