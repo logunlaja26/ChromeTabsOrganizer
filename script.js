@@ -1,7 +1,7 @@
 let listOfAllTabId = [];
 let listOfAllTabUrls = [];
 let selectedTabs = [];
-let output3 = [];
+let diDuplicatedListOfUrls = [];
 
 let displayAllTabsBtn = document.getElementById("input-btn");
 let deleteTabsBtn = document.getElementById("delete-btn");
@@ -17,8 +17,8 @@ let leadsFromLocalStorage = JSON.parse(localStorage.getItem("tabs"));
 console.log(`local storage values ......${leadsFromLocalStorage}`);
 
 if (leadsFromLocalStorage) {
-  output3 = leadsFromLocalStorage;
-  renderTabs(output3);
+  diDuplicatedListOfUrls = leadsFromLocalStorage;
+  renderTabs(diDuplicatedListOfUrls);
 }
 
 tableEl.addEventListener("click", onDeleteRow);
@@ -26,8 +26,8 @@ tableEl.addEventListener("click", onDeleteRow);
 displayAllTabsBtn.addEventListener("click", function () {
   console.log("******Display All tab urls******");
   getPropertiesOfAllTabs();
-  localStorage.setItem("tabs", JSON.stringify(output3));
-  renderTabs(output3);
+  localStorage.setItem("tabs", JSON.stringify(diDuplicatedListOfUrls));
+  renderTabs(diDuplicatedListOfUrls);
   console.log(
     `lets see whats in localStoragae..... ${localStorage.getItem("tabs")}`
   );
@@ -36,13 +36,13 @@ displayAllTabsBtn.addEventListener("click", function () {
    **/
 });
 
-singleBtn.addEventListener("click", function () {
-  console.log("******Display selected tab url******");
-  getCurrentTab();
-  localStorage.setItem("tabs", JSON.stringify(listOfAllTabUrls));
-  renderTabs(listOfAllTabUrls);
-  console.log(localStorage.getItem("tabs"));
-});
+// singleBtn.addEventListener("click", function () {
+//   console.log("******Display selected tab url******");
+//   getCurrentTab();
+//   localStorage.setItem("tabs", JSON.stringify(listOfAllTabUrls));
+//   renderTabs(listOfAllTabUrls);
+//   console.log(localStorage.getItem("tabs"));
+// });
 
 deleteTabsBtn.addEventListener("click", function () {
   console.log("******Delete tabs url******");
@@ -52,10 +52,10 @@ deleteTabsBtn.addEventListener("click", function () {
   renderTabs(listOfAllTabUrls);
 });
 
-groupTabsBtn.addEventListener("click", function () {
-  console.log("******This is for grouping tabs in a window******");
-  groupAllTabs();
-});
+// groupTabsBtn.addEventListener("click", function () {
+//   console.log("******This is for grouping tabs in a window******");
+//   groupAllTabs();
+// });
 
 function renderTabs(tabUrls) {
   let listItems = "";
@@ -131,7 +131,7 @@ function removeDuplicates() {
   for (const object of listOfAllTabUrls) {
     if (!map.has(object.url)) {
       map.set(object.url, true);
-      output3.push({
+      diDuplicatedListOfUrls.push({
         url: object.url,
         id: object.id,
         favIconUrl: object.favIconUrl,

@@ -3,15 +3,17 @@
     "description": "An Extension that effectively manages excessive tabs opened in Chrome wepage instance ",
     "version": "1.0",
     "manifest_version": 3,
-    "permissions": ["activeTab", "scripting","tabs","background"],
+    "permissions": ["activeTab","tabs","background"],
     "background": {
       "service_worker": "background.js"
   },
-    "action": {},
+    "action": {
+      "default_icon": "/images/Screen Shot 2022-03-07 at 4.23.01 PM.png"
+  },
     "icons": {
-      "16": "/images/get_started16.png",
-      "32": "/images/get_started32.png",
-      "48": "/images/get_started48.png",
-      "128": "/images/get_started128.png"
+      "16": "/images/Screen Shot 2022-03-07 at 4.23.01 PM.png",
+      "32": "/images/Screen Shot 2022-03-07 at 4.23.01 PM (2).jpg",
+      "48": "/images/Screen Shot 2022-03-07 at 4.23.01 PM (1).jpg",
+      "128": "/images/Screen Shot 2022-03-07 at 4.23.01 PM.jpg"
     }
   }
