@@ -13,6 +13,7 @@ let btn = document.createElement("button");
 const tbodyEl = document.querySelector("tbody");
 const tableEl = document.querySelector("table");
 
+localStorage.clear();
 let leadsFromLocalStorage = JSON.parse(localStorage.getItem("tabs"));
 console.log(`local storage values ......${leadsFromLocalStorage}`);
 
@@ -62,7 +63,7 @@ function renderTabs(tabUrls) {
   for (let i = 0; i < tabUrls.length; i++) {
     listItems += `
           <tr>
-              <td><button class="deleteBtn">Delete</button></td>
+              <td><button class="deleteBtn">close</button></td>
               <td><a target='_blank' href='${tabUrls[i].url}'>
               ${tabUrls[i].title}
               </a></td>
@@ -117,10 +118,8 @@ function onDeleteRow(e) {
   if (!e.target.classList.contains("deleteBtn")) {
     return;
   }
-
   const btn = e.target;
   btn.closest("tr").remove();
-  listOfAllTabUrls.remove();
   console.log(
     `The new list of tabs after row is deleted....${listOfAllTabUrls}`
   );
